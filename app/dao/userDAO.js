@@ -5,26 +5,9 @@ module.exports = function(app) {
     let dao = {};
     const model = mongoose.model('user');
 
-    dao.create = function(user, callback) {
+    dao.create = async function(user) {
 
-        model.find({}, 'id', function(error, result) {
-
-            if(error) {
-                return callback(error, result);
-            }else {
-                let users = result;
-                let greater = 0;
-
-                for(let i = 0; i < users.length; i++) {
-                    if(users[i].id > greater) {
-                        greater = users[i].id;
-                    }
-                }
-
-                user.id = greater + 1;
-                model.create(user, callback);
-            }
-        });
+        let result = await model.create(user);
     };
 
     dao.read = function(callback) {

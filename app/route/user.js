@@ -1,9 +1,11 @@
+const fs = require('fs');
+
 module.exports = function(app) {
 
     let userDAO = app.dao.userDAO;
     let userDAOC = app.dao.userDAOC;
 
-    app.post('/user', function(req, res) {
+    app.post('/user', async function(req, res) {
 
         let user = req.body.user;
         let quant = req.body.quant;
@@ -13,46 +15,23 @@ module.exports = function(app) {
 
         inicio = new Date().getTime();
         for(let i = 0; i < quant; i++) {
-            userDAOC.create(user, function(error, result) {
-
-                if(error) console.log(error);
-                if(i == (quant - 1)) {
-                    fim = new Date().getTime();
-                    console.log(fim - inicio);
-                    res.send("ok");
-                }
-            });
+            await userDAOC.create(user);
         }
-        
+        fim = new Date().getTime();
 
-//        userDAO.readByName(user.name, function(error, result) {
-//
-//            if(error) {
-//                res.status(500).json({
-//                    "error": "erro no servidor"
-//                });
-//            }else {
-//                if(result) {
-//                    res.status(400).json({
-//                        "error": "já existe um usuário com este nome"
-//                    });
-//                }else {
-//                    userDAO.create(user, function(error, result) {
-//
-//                        console.log(error);
-//                        if(error) {
-//                            res.status(500).json({
-//                                "error": "erro no servidor"
-//                            });
-//                        }else {
-//                            res.status(201).json({
-//                                "id": result.id
-//                            });
-//                        }
-//                    });
-//                }
-//            }
-//        });
+        fs.appendFileSync('testeVelocidadeCassandra.txt', quant + ' ' + (fim - inicio) + '\n');
+
+        user.id = 24;
+        inicio = new Date().getTime();
+        for(let i = 0; i < quant; i++) {
+            await userDAO.create(user);
+        }
+        fim = new Date().getTime();
+
+        fs.appendFile('testeVelocidadeMongo.txt', quant + ' ' + (fim - inicio) + '\n');
+        console.log("OK");
+
+        res.send("ok");
     });
 
     app.get('/user', function(req, res) {

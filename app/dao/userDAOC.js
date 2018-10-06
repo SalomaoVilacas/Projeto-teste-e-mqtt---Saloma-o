@@ -5,11 +5,11 @@ module.exports = function() {
 
     let dao = {};
 
-    dao.create = function(user, callback) {
+    dao.create = async function(user) {
 
-        let query = "INSERT INTO user (id, first_name, last_name, phone_number) VALUES ("+ uuid() + ", '" + user.first_name + "', '" + user.last_name + "', '" + user.phone_number + "')";
+        let query = "INSERT INTO user (id, first_name, last_name, phone_number) VALUES (" + uuid() + ", '" + user.first_name + "', '" + user.last_name + "', '" + user.phone_number + "')";
 
-        client.execute(query, callback);
+        return await client.execute(query);
     };
 
     dao.read = function(callback) {

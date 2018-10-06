@@ -3,7 +3,15 @@ const userModel = {
         'type': Number,
         'required': true
     },
-    'name': {
+    'first_name': {
+        'type': String,
+        'required': true
+    },
+    'last_name': {
+        'type': String,
+        'required': true
+    },
+    'phone_number': {
         'type': String,
         'required': true
     }
